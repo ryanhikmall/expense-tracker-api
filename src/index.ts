@@ -1,10 +1,7 @@
+import "dotenv/config"; // Tambahkan ini agar file .env kamu bisa dibaca
 import app from "./app";
-import dotenv from "dotenv";
 
-dotenv.config();
-
-const PORT = process.env.PORT || 3000;
-
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server jalan di http://localhost:${PORT}`);
 });
