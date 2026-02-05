@@ -1,8 +1,13 @@
 import { Router } from "express";
-import * as authController from "../controllers/auth.controller";
+// Import HARUS sama persis dengan nama di controller ('register' & 'login')
+import { register, login } from "../controllers/auth.controller";
 
-const router = Router();
+const authRouter = Router();
 
-router.post("/register", authController.register);
+// Pastikan variabel 'register' warnanya nyala (tidak pudar)
+authRouter.post("/register", register);
 
-export default router;
+// Pastikan variabel 'login' warnanya nyala
+authRouter.post("/login", login);
+
+export default authRouter;

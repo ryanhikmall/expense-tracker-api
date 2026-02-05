@@ -1,10 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
 
-const prisma = new PrismaClient({
-  adapter: new PrismaPg({
-    connectionString: process.env.DATABASE_URL!,
-  }),
-});
+// Kosongkan saja. Prisma v5 akan baca URL yang kita tulis di schema.prisma
+const prisma = new PrismaClient();
 
 export default prisma;

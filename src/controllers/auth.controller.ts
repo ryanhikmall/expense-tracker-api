@@ -1,15 +1,34 @@
 import { Request, Response } from "express";
-import * as authService from "../services/auth.service";
+import { registerUser, loginUser } from "../services/auth.service";
 
-
+// 1. Nama fungsi ini harus 'register'
 export const register = async (req: Request, res: Response) => {
   try {
     const { email, password, name } = req.body;
-    const user = await authService.registerUser(email, password, name);
+    const result = await registerUser(email, password, name);
 
     res.status(201).json({
-      message: "User berhasil didaftarkan! 🎉",
-      data: user,
+      message: "Registrasi Berhasil",
+      data: {
+        id: result.id,
+        name: result.name,
+        email: result.email,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// 2. Nama fungsi ini harus 'login'
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const result = await loginUser(email, password);
+
+    res.status(200).json({
+      message: "Login berhasil",
+      token: result.token,
     });
   } catch (error: any) {
     res.status(400).json({ message: error.message });

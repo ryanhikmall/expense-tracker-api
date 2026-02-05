@@ -4,6 +4,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // Di Prisma v5, cara ini LEGAL dan PASTI JALAN
+  url      = "postgresql://user_admin:password_rahasia@localhost:5433/expense_db?schema=public"
 }
 
 model User {

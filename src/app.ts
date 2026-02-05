@@ -1,17 +1,14 @@
-import express, { Application } from "express";
-import cors from "cors";
-import authRoutes from "./routes/auth.route";
+import express from "express";
+import authRouter from "./routes/auth.route";
 
-const app: Application = express();
+const app = express();
 
-app.use(cors());
+// 1. Middleware WAJIB (Agar bisa baca Body JSON dari Postman)
+// Posisinya HARUS di atas route
 app.use(express.json());
 
-// Gunakan route auth
-app.use("/api/auth", authRoutes);
+// 2. Pasang Routes
+app.use("/api/auth", authRouter);
 
-app.get("/ping", (req, res) => {
-  res.status(200).json({ message: "Server Expense Tracker Ready! 🚀" });
-});
-
+// 3. Export app agar bisa dipanggil oleh index.ts
 export default app;
