@@ -15,3 +15,14 @@ export const createExpenseService = async (
     },
   });
 };
+
+export const getExpensesService = async (userId: number) => {
+  return await prisma.expense.findMany({
+    where: {
+      userId: userId, // FILTER KUNCI: Cuma ambil punya user ini
+    },
+    orderBy: {
+      date: "desc", // Urutkan dari yang paling baru
+    },
+  });
+};
