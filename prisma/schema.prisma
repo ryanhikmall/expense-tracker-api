@@ -13,4 +13,19 @@ model User {
   email    String  @unique
   password String
   name     String?
+  expenses Expense[]
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  title       String   // Judul: misal "Makan Siang"
+  amount      Int      // Nominal: misal 15000
+  category    String   // Kategori: misal "Food", "Transport"
+  date        DateTime @default(now()) // Tanggal transaksi
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Kunci Asing (Foreign Key) untuk menghubungkan ke User
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
 }
