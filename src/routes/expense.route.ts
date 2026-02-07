@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { authenticateToken } from "../middlewares/auth.middleware";
-import { createExpense, getExpenses } from "../controllers/expense.controller";
+import {
+  createExpense,
+  getExpenses,
+  updateExpense,
+} from "../controllers/expense.controller";
 
 const expenseRouter = Router();
 
@@ -8,5 +12,7 @@ const expenseRouter = Router();
 // Satpam jaga di depan, baru boleh masuk ke createExpense
 expenseRouter.post("/", authenticateToken, createExpense);
 expenseRouter.get("/", authenticateToken, getExpenses);
+
+expenseRouter.patch("/:id", authenticateToken, updateExpense);
 
 export default expenseRouter;

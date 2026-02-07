@@ -3,6 +3,7 @@ import { AuthRequest } from "../middlewares/auth.middleware"; // Import tipe dat
 import {
   createExpenseService,
   getExpensesService,
+  updateExpenseService,
 } from "../services/expense.service";
 
 export const createExpense = async (req: AuthRequest, res: Response) => {
@@ -37,5 +38,26 @@ export const getExpenses = async (req: AuthRequest, res: Response) => {
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateExpense = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const expenseId = Number(req.params.id); // Ambil ID dari URL (string -> number)
+    const { title, amount, category } = req.body; // Ambil data baru
+
+    const updatedExpense = await updateExpenseService(expenseId, userId, {
+      title,
+      amount,
+      category,
+    });
+
+    res.status(200).json({
+      message: "Pengeluaran berhasil diupdate!",
+      data: updatedExpense,
+    });
+  } catch (error: any) {
+    res.status(404).json({ message: error.message });
   }
 };
