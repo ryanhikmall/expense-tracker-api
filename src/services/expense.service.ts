@@ -53,3 +53,22 @@ export const updateExpenseService = async (
     data: data,
   });
 };
+
+export const deleteExpenseService = async (id: number, userId: number) => {
+  // 1. Cek dulu: Apakah barang ini ada DAN milik user ini?
+  const expense = await prisma.expense.findFirst({
+    where: {
+      id: id,
+      userId: userId,
+    },
+  });
+
+  if (!expense) {
+    throw new Error("Pengeluaran tidak ditemukan atau Anda tidak punya akses");
+  }
+
+  // 2. Kalau aman, hapus!
+  return await prisma.expense.delete({
+    where: { id: id },
+  });
+};

@@ -4,6 +4,7 @@ import {
   createExpenseService,
   getExpensesService,
   updateExpenseService,
+  deleteExpenseService,
 } from "../services/expense.service";
 
 export const createExpense = async (req: AuthRequest, res: Response) => {
@@ -56,6 +57,22 @@ export const updateExpense = async (req: AuthRequest, res: Response) => {
     res.status(200).json({
       message: "Pengeluaran berhasil diupdate!",
       data: updatedExpense,
+    });
+  } catch (error: any) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const deleteExpense = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const expenseId = Number(req.params.id);
+
+    // Panggil Service (Urutan: ID Barang dulu, baru ID User)
+    await deleteExpenseService(expenseId, userId);
+
+    res.status(200).json({
+      message: "Pengeluaran berhasil dihapus!",
     });
   } catch (error: any) {
     res.status(404).json({ message: error.message });
