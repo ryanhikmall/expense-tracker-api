@@ -12,6 +12,7 @@ import { validate } from "../middlewares/validate.middleware";
 import {
   createExpenseSchema,
   updateExpenseSchema,
+  getExpenseSchema,
 } from "../schemas/expense.schema";
 
 const expenseRouter = Router();
@@ -35,5 +36,12 @@ expenseRouter.patch(
 );
 
 expenseRouter.delete("/:id", authenticateToken, deleteExpense);
+
+expenseRouter.get(
+  "/",
+  authenticateToken,
+  validate(getExpenseSchema),
+  getExpenses,
+);
 
 export default expenseRouter;

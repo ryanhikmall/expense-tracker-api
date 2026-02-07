@@ -1,6 +1,18 @@
 // src/schemas/expense.schema.ts
 import { z } from "zod";
 
+export const getExpenseSchema = z.object({
+  query: z.object({
+    // User kirim string "1", kita ubah jadi number 1 otomatis
+    page: z.string().transform(Number).pipe(z.number().min(1)).optional(),
+    limit: z
+      .string()
+      .transform(Number)
+      .pipe(z.number().min(1).max(100))
+      .optional(),
+  }),
+});
+
 export const createExpenseSchema = z.object({
   body: z.object({
     title: z.string().min(3, "Judul minimal 3 karakter"), // Gak boleh kependekan

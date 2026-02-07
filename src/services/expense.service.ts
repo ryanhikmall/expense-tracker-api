@@ -16,15 +16,26 @@ export const createExpenseService = async (
   });
 };
 
-export const getExpensesService = async (userId: number) => {
-  return await prisma.expense.findMany({
-    where: {
-      userId: userId, // FILTER KUNCI: Cuma ambil punya user ini
-    },
-    orderBy: {
-      date: "desc", // Urutkan dari yang paling baru
-    },
-  });
+// Ganti fungsi getExpensesService yang lama dengan ini:
+export const getExpensesService = async (userId: number, page: number = 1, limit: number = 10) => {
+  const skip = (page - 1) * limit;
+
+  // Kita jalankan 2 query sekaligus (Paralel) biar cepat
+  const [expenses, totalData] = await Promise.all([
+    // Query 1: Ambil datanya (dipotong)
+    prisma.expense.findMany({
+      where: { userId },
+      skip: skip,
+      take: limit,
+      orderBy: { date: "desc" },
+    }),
+    // Query 2: Hitung total semua data user ini
+    prisma.expense.count({
+      where: { userId },
+    }),
+  ]);
+
+  return { expenses, totalData };
 };
 
 export const updateExpenseService = async (

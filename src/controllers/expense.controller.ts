@@ -27,15 +27,35 @@ export const createExpense = async (req: AuthRequest, res: Response) => {
   }
 };
 
+
+
 export const getExpenses = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user?.id; // Ambil ID dari Token
+    const userId = req.user?.id;
 
-    const expenses = await getExpensesService(userId);
+    // Ambil page & limit dari Query URL (Default: page 1, limit 10)
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const { expenses, totalData } = await getExpensesService(
+      userId,
+      page,
+      limit,
+    );
+
+    // Hitung total halaman
+    const totalPages = Math.ceil(totalData / limit);
 
     res.status(200).json({
       message: "Data berhasil diambil",
       data: expenses,
+      // Metadata Pagination (Penting buat Frontend)
+      meta: {
+        page: page,
+        limit: limit,
+        totalData: totalData,
+        totalPages: totalPages,
+      },
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
