@@ -7,13 +7,33 @@ import {
   deleteExpense,
 } from "../controllers/expense.controller";
 
+// Import Validator
+import { validate } from "../middlewares/validate.middleware";
+import {
+  createExpenseSchema,
+  updateExpenseSchema,
+} from "../schemas/expense.schema";
+
 const expenseRouter = Router();
 
-// POST /api/expenses
-// Satpam jaga di depan, baru boleh masuk ke createExpense
-expenseRouter.post("/", authenticateToken, createExpense);
+// Pasang validate(createExpenseSchema) SEBELUM controller
+expenseRouter.post(
+  "/",
+  authenticateToken,
+  validate(createExpenseSchema),
+  createExpense,
+);
+
 expenseRouter.get("/", authenticateToken, getExpenses);
-expenseRouter.patch("/:id", authenticateToken, updateExpense);
+
+// Pasang validate(updateExpenseSchema)
+expenseRouter.patch(
+  "/:id",
+  authenticateToken,
+  validate(updateExpenseSchema),
+  updateExpense,
+);
+
 expenseRouter.delete("/:id", authenticateToken, deleteExpense);
 
 export default expenseRouter;
