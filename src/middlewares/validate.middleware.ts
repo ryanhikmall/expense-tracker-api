@@ -1,44 +1,36 @@
 import { Request, Response, NextFunction } from "express";
-import { ZodTypeAny } from "zod";
+import { z } from "zod";
 
-export const validate =
-  (schema: ZodTypeAny) =>
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      // 1. Validasi Aman (Safe Parse)
-      const result = await schema.safeParseAsync({
-        body: req.body,
-        query: req.query,
-        params: req.params,
-      });
+// 1. Definisikan Aturan Validasi (Schema) di sini
+const createExpenseSchema = z.object({
+  title: z.string().min(3, "Title minimal 3 karakter"),
+  amount: z.number().min(1000, "Minimal pengeluaran Rp 1.000"),
+  category: z.string().min(3, "Kategori minimal 3 karakter"),
+});
 
-      // 2. Jika Sukses, Lanjut!
-      if (result.success) {
-        return next();
-      }
+// 2. Middleware Pengecek (Langsung pakai schema di atas)
+export const validateExpense = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // Cek data req.body
+  const result = createExpenseSchema.safeParse(req.body);
 
-      // 3. Jika Gagal, Format Pesan Errornya
-      // Kita pakai .issues (ini properti asli Zod yang paling aman)
-      const issues = result.error.issues;
+  if (!result.success) {
+    // Kalau gagal, format errornya biar rapi
+    const formattedErrors = result.error.issues.map((issue) => ({
+      field: issue.path[0],
+      message: issue.message,
+    }));
 
-      const formattedErrors = issues.map((issue) => {
-        return {
-          // Ambil nama field (misal: body.title -> title)
-          field: issue.path[1] || issue.path[0] || "unknown",
-          message: issue.message,
-        };
-      });
+    return res.status(400).json({
+      status: "fail",
+      message: "Data tidak valid",
+      errors: formattedErrors,
+    });
+  }
 
-      // 4. Kirim Respon Rapi ke User
-      return res.status(400).json({
-        message: "Data tidak valid",
-        errors: formattedErrors,
-      });
-    } catch (err) {
-      // Jaga-jaga kalau ada error server lain
-      console.error("🔥 Server Error:", err);
-      return res
-        .status(500)
-        .json({ message: "Terjadi kesalahan internal server" });
-    }
-  };
+  // Kalau sukses, lanjut!
+  next();
+};

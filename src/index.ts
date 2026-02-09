@@ -8,6 +8,7 @@ import Logger from "./lib/logger"; // <--- Import Logger Winston
 import { errorMiddleware } from "./middlewares/error.middleware";
 import authRouter from "./routes/auth.route";
 import { limiter } from "./middlewares/rateLimit.middleware";
+import { swaggerDocs } from "./utils/swagger";
 
 const app = express(); // <--- Bikin app baru di sini (Lebih aman urutannya)
 const PORT = 3000;
@@ -36,4 +37,6 @@ app.listen(PORT, () => {
   // GANTI console.log DENGAN Logger.info
   // Supaya muncul jam dan warna hijaunya!
   Logger.info(`🚀 Server jalan di http://localhost:${PORT}`);
+
+  swaggerDocs(app, PORT);
 });
