@@ -9,7 +9,7 @@ import { errorMiddleware } from "./middlewares/error.middleware";
 import authRouter from "./routes/auth.route";
 import { limiter } from "./middlewares/rateLimit.middleware";
 import { swaggerDocs } from "./utils/swagger";
-
+import path from "path";
 const app = express(); // <--- Bikin app baru di sini (Lebih aman urutannya)
 const PORT = 3000;
 
@@ -31,6 +31,8 @@ app.use("/api/expenses", expenseRouter);
 app.use("/api/expenses", expenseRouter);
 
 app.use(errorMiddleware);
+
+app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 
 // 5. Jalankan Server
 app.listen(PORT, () => {

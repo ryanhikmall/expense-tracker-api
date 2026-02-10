@@ -25,6 +25,8 @@ model Expense {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  attachment String?
+
   // Kunci Asing (Foreign Key) untuk menghubungkan ke User
   userId      Int
   user        User     @relation(fields: [userId], references: [id])

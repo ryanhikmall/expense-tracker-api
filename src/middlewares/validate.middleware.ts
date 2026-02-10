@@ -4,7 +4,7 @@ import { z } from "zod";
 // 1. Definisikan Aturan Validasi (Schema) di sini
 const createExpenseSchema = z.object({
   title: z.string().min(3, "Title minimal 3 karakter"),
-  amount: z.number().min(1000, "Minimal pengeluaran Rp 1.000"),
+  amount: z.coerce.number().min(1000, "Minimal pengeluaran Rp 1.000"),
   category: z.string().min(3, "Kategori minimal 3 karakter"),
 });
 

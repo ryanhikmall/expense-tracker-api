@@ -7,6 +7,7 @@ import {
 } from "../controllers/expense.controller";
 import { authenticateToken } from "../middlewares/auth.middleware";
 import { validateExpense } from "../middlewares/validate.middleware"; // Pastikan path ini benar
+import { upload } from "../middlewares/upload.middleware";
 
 const expenseRouter = Router();
 
@@ -139,7 +140,13 @@ const expenseRouter = Router();
  */
 
 // Route Implementations
-expenseRouter.post("/", authenticateToken, validateExpense, createExpense);
+expenseRouter.post(
+  "/",
+  authenticateToken,
+  upload.single("attachment"),
+  validateExpense,
+  createExpense
+);
 expenseRouter.get("/", authenticateToken, getExpenses);
 expenseRouter.patch("/:id", authenticateToken, updateExpense);
 expenseRouter.delete("/:id", authenticateToken, deleteExpense);
