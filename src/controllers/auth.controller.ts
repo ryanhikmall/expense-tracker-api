@@ -16,6 +16,11 @@ export const register = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
+
+    if (error.code === 'P2002') {
+      return res.status(400).json({ message: "Email sudah terdaftar" });
+    }
+    
     res.status(500).json({ message: error.message });
   }
 };
